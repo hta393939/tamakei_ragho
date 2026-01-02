@@ -1,29 +1,6 @@
 
 class CharDraw {
 
-  async load() {
-    const opt = {
-      basePath: '../../png/',
-    };
-    const SIZE = 256;
-
-    const res = await fetch(`${opt.basePath}up_icon.png`);
-    const blob = await res.blob();
-
-    const image = await new Promise((resolve, reject) => {
-      const url = URL.createObjectURL(blob);
-      const image = new Image();
-      image.addEventListener('load', () => {
-        resolve(image);
-      }, { once: true });
-      image.addEventListener('error', event => {
-        // Do nothing.
-      });
-      image.src = url;
-    });
-
-  }
-
   async start() {
     const opt = {
       basePath: '../../png/',
@@ -32,16 +9,18 @@ class CharDraw {
     const tama = await SDChr.CreateCharacter(SDChr.CHAR_TAMANE, SDChr.DIR_LEFT, opt);
     const canvas = document.getElementById('maincanvas');
     const context = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 512;
+    canvas.width = 960;
+    canvas.height = 540;
 
-    const keipos = { x: 0, y: 0, scale: 0.5 };
-    const tamapos = { x: 0, y: 0, scale: 0.5 };
+    const scale = 0.4;
+
+    const keipos = { x: 0, y: canvas.height - SDChr.FSY * scale, scale };
+    const tamapos = { x: 0, y: canvas.height - SDChr.FSY * scale, scale };
     tamapos.x = canvas.width - SDChr.FSX * tamapos.scale;
 
-    for (let i = 0; i < 2; ++i) {
+    for (let i = 0; i < 4; ++i) {
       context.clearRect(0, 0, canvas.width, canvas.height);
-      switch(i) {
+      switch (i) {
       case 0:
         kei.putex(SDChr.EX_DOYA, context, keipos);
         tama.putex(SDChr.EX_JITOME, context, tamapos);
@@ -51,6 +30,23 @@ class CharDraw {
           context, keipos);
         tama.put(SDChr.BROW_SAD, SDChr.EYE_CLOSE, SDChr.MOUTH_OPEN,
           context, tamapos);
+        break;
+
+      case 2:
+        kei.put(SDChr.BROW_ANGRY, SDChr.EYE_HALF, SDChr.MOUTH_CLOSE,
+          context, keipos);
+        kei.addicon(SDChr.ICON_IKARI, context, keipos);
+
+        tama.put(SDChr.BROW_SURPRISED, SDChr.EYE_HALF, SDChr.MOUTH_OPEN,
+          context, tamapos);
+        break;
+
+      case 3:
+        kei.putex(SDChr.EX_IKARI, context, keipos);
+        kei.addicon(SDChr.ICON_IKARI, context, keipos);
+
+        tama.putex(SDChr.EX_URESHII, context, tamapos);
+        tama.addicon(SDChr.ICON_HEART, context, tamapos);
         break;
       }
 
@@ -65,5 +61,3 @@ class CharDraw {
 
 const chardraw = new CharDraw();
 chardraw.start();
-chardraw.load();
-

@@ -68,6 +68,15 @@ class SDChr {
   static EX_URESHII = 6;
   static EX_JITOME = 7;
 
+  static ICON_NONE = 0;
+  static ICON_STAR = 1;
+  static ICON_NIGI0 = 2;
+  static ICON_NIGI1 = 3;
+  static ICON_HEART = 4;
+  static ICON_GUU = 5;
+  static ICON_HA = 6;
+  static ICON_IKARI = 7;
+
   /**
    * 全体ベース幅
    */
@@ -103,6 +112,8 @@ class SDChr {
    * 開始地点オフセット
    */
   static OFFSET_MOUTH = SDChr.FPY * 7;
+  /** 1つのアイコンの元ピクセル */
+  static ICON_SIZE = 1024 / 4;
 
   constructor() {
     /**
@@ -206,6 +217,13 @@ class SDChr {
       let filename = `${this.basePath}face_${name}.png`;
       this.face = await _fetch(filename);
     }
+
+    {
+      let filename = `${this.basePath}up_icon.png`;
+      const res = await fetch(filename);
+      const blob = await res.blob();
+      this.icon = await window.createImageBitmap(blob);     
+    }
   }
 
   /**
@@ -236,7 +254,7 @@ class SDChr {
       let srcw = SDChr.FPX;
       let srch = SDChr.FPY;
 
-      switch(i) {
+      switch (i) {
       case 1: // 眉
         srcx = SDChr.FSX;
         srcy = SDChr.FPY * _p2;
@@ -273,13 +291,13 @@ class SDChr {
    */
   putex(_p2, context, param) {
     const scale = param.scale || 1;
-// ベース
+    // ベース
     let sx = SDChr.FSX * scale;
     let sy = SDChr.FSY * scale;
     context.drawImage(this.base,
       0, 0, SDChr.FSX, SDChr.FSY,
       param.x, param.y, sx, sy);
-// 特殊表情
+    // 特殊表情
     sx = SDChr.FOX * scale;
     sy = SDChr.FOY * scale;
     let x = this.expressionOffset[0] * scale;
@@ -292,6 +310,29 @@ class SDChr {
       srcx, srcy, SDChr.FOX, SDChr.FOY,
       param.x + x, param.y + y, sx, sy);
   }
+
+  /**
+   * アイコンを描画する。
+   * @param {number} _p2 アイコンの指定
+   * @param {CanvasRenderingContext2D} context 描画先
+   * @param {{x:number,y:number,scale:number, isright:boolean}} param
+   */
+  addicon(_p2, context, param) {
+    const scale = param.scale || 1;
+    const sx = SDChr.ICON_SIZE * scale;
+    const sy = SDChr.ICON_SIZE * scale;
+    let x = 0 * scale;
+    let y = 0 * scale;
+
+    const mx = _p2 & 1;
+    const srcx = ((param.isright) ? (3 - mx) : mx) * SDChr.ICON_SIZE;
+    const srcy = Math.floor(_p2 / 2) * SDChr.ICON_SIZE;
+
+    context.drawImage(this.icon,
+      srcx, srcy, SDChr.ICON_SIZE, SDChr.ICON_SIZE,
+      param.x + x, param.y + y, sx, sy);
+  }
+
 
 }
 
