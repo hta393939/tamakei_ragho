@@ -19,13 +19,9 @@ class SDChr {
    */
   static CHAR_CHIYURI = 'ti';
 
-  /**
-   * 左向き
-   */
+  /** 左向き */
   static DIR_LEFT = 'l';
-  /**
-   * 右向き
-   */
+  /** 右向き */
   static DIR_RIGHT = 'r';
 
   /**
@@ -69,12 +65,12 @@ class SDChr {
   static EX_JITOME = 7;
 
   static ICON_NONE = 0;
-  static ICON_STAR = 1;
-  static ICON_NIGI0 = 2;
-  static ICON_NIGI1 = 3;
+  static ICON_KIRA = 1;
+  static ICON_YO0 = 2;
+  static ICON_YO1 = 3;
   static ICON_HEART = 4;
-  static ICON_GUU = 5;
-  static ICON_HA = 6;
+  static ICON_MOYA = 5;
+  static ICON_BIKK = 6;
   static ICON_IKARI = 7;
 
   /**
@@ -129,14 +125,18 @@ class SDChr {
      * @type {Image}
      */
     this.face = null;
+    /** アイコン */
+    this.icon = null;
 
     this.expressionOffset = [0, 0];
+
+    this.charflip = 1;
   }
 
   /**
    * API. 
    * @param {string} char 
-   * @param {string} leftRight 
+   * @param {string} leftRight SDChr.DIR_LEFT or SDChr.DIR_RIGHT
    * @param {Object} param 
    * @param {string?} param.basePath スラッシュをつけること
    */
@@ -145,6 +145,9 @@ class SDChr {
     if (typeof param.basePath === 'string') {
       sd.basePath = param.basePath;
     }
+
+    sd.charflip = (leftRight === SDChr.DIR_RIGHT) ? 1 : 0;
+
     await sd.load(char, leftRight);
     return sd;
   }
@@ -315,22 +318,32 @@ class SDChr {
    * アイコンを描画する。
    * @param {number} _p2 アイコンの指定
    * @param {CanvasRenderingContext2D} context 描画先
-   * @param {{x:number,y:number,scale:number, isright:boolean}} param
+   * @param {{x:number,y:number,scale:number}} param
    */
   addicon(_p2, context, param) {
+    const offsets = [
+      [0, 0], [10, 80],
+      [-50, 100], [-50, 100],
+      [-50, 100], [-50, 100],
+      [30, 30], [0, 100],
+    ];
+
     const scale = param.scale || 1;
     const sx = SDChr.ICON_SIZE * scale;
     const sy = SDChr.ICON_SIZE * scale;
-    let x = 0 * scale;
-    let y = 0 * scale;
-
-    const mx = _p2 & 1;
-    const srcx = ((param.isright) ? (3 - mx) : mx) * SDChr.ICON_SIZE;
+    let x = offsets[_p2][0];
+    let y = offsets[_p2][1];
+    let mx = _p2 & 1;
+    if (this.charflip) {
+      mx = 3 - mx;
+      x = SDChr.FSX - x - SDChr.ICON_SIZE;
+    }
+    const srcx = mx * SDChr.ICON_SIZE;
     const srcy = Math.floor(_p2 / 2) * SDChr.ICON_SIZE;
 
     context.drawImage(this.icon,
       srcx, srcy, SDChr.ICON_SIZE, SDChr.ICON_SIZE,
-      param.x + x, param.y + y, sx, sy);
+      param.x + x * scale, param.y + y * scale, sx, sy);
   }
 
 
