@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta char="UTF-8" />
+    <title>慧珠 1キャラ javascript 版</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <div>
+      <div>
+<label class="pointer"><input checked type="radio" name="radiochar" value="ke" class="pointer" />彗</label>
+<label class="pointer"><input type="radio" name="radiochar" value="ta" class="pointer" />珠音</label>
+<label class="pointer"><input type="radio" name="radiochar" value="fi" class="pointer" />フィネス</label>
+<label class="pointer"><input type="radio" name="radiochar" value="ti" class="pointer" />千由莉</label>
+      </div>
+      <div>
+<label class="pointer"><input checked type="radio" name="radiodir" value="right" class="pointer" />右向き</label>
+<label class="pointer"><input type="radio" name="radiodir" value="left" class="pointer" />左向き</label>
+      </div>
+      <div>
+        表情
+        <select id="selemo" class="pointer">
+          <option value="0">組み合わせ(未実装)</option>
+          <option value="1">泣き</option>
+          <option value="2">ドヤ顔</option>
+          <option value="3">丸目</option>
+          <option value="4">にっこり</option>
+          <option value="5">怒り</option>         
+          <option value="6">嬉しい</option>
+          <option value="7">ジト目</option>
+        </select>
+      </div>
+      <div>未実装
+        <div>眉</div>
+        <div>目</div>
+        <div>口</div>
+      </div>
+      <div>
+        アイコン
+        <select id="selicon" class="pointer">
+          <option value="0">無し</option>
+          <option value="1">キラキラ</option>
+          <option value="2">陽0</option>
+          <option value="3">陽1</option>
+          <option value="4">ハート</option>
+          <option value="5">モヤモヤ</option>
+          <option value="6">ビクッ</option>
+          <option value="7">怒り</option>  
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <canvas id="maincanvas" class="limitation"></cavnas>
+    </div>
+
+    <script src="./sdchr.js"></script>
+    <script src="./select.js"></script>
+  </body>
+</html>

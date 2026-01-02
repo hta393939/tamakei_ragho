@@ -3,3 +3,10 @@
   border: solid 1px green;
 }
 
+.pointer, .pointer option {
+  cursor: pointer;
+}
+
+.limitation {
+  max-height: 90vh;
+}
