@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta char="UTF-8" />
-    <title>慧珠 1キャラ javascript 版</title>
+    <title>1キャラ javascript 版</title>
     <link rel="stylesheet" href="./index.css" />
   </head>
   <body class="toright">
@@ -11,7 +11,7 @@
       <canvas id="maincanvas" class="limitation"></cavnas>
     </div>
 
-    <div>
+    <div class="pad1">
       <div>
 <label class="pointer"><input checked type="radio" name="radiochar" value="ke" class="pointer" />彗</label>
 <label class="pointer"><input type="radio" name="radiochar" value="ta" class="pointer" />珠音</label>
@@ -25,7 +25,7 @@
       <div>
         表情
         <select id="selemo" class="pointer">
-          <option value="0">組み合わせ(未実装)</option>
+          <option value="0">組み合わせ</option>
           <option value="1">泣き</option>
           <option value="2">ドヤ顔</option>
           <option value="3">丸目</option>
@@ -35,9 +35,12 @@
           <option value="7">ジト目</option>
         </select>
       </div>
-      <div>未実装
+      <div>組み合わせ時のパーツ
         <div>眉
-
+<label class="pointer"><input checked type="radio" name="radiobrow" value="0" class="pointer" />通常</label>
+<label class="pointer"><input type="radio" name="radiobrow" value="1" class="pointer" />悲しい</label>
+<label class="pointer"><input type="radio" name="radiobrow" value="2" class="pointer" />怒り</label>
+<label class="pointer"><input type="radio" name="radiobrow" value="3" class="pointer" />驚き</label>
         </div>
         <div>目
 <label class="pointer"><input checked type="radio" name="radioeye" value="0" class="pointer" />普通</label>
@@ -58,7 +61,7 @@
           <option value="3">陽1</option>
           <option value="4">ハート</option>
           <option value="5">モヤモヤ</option>
-          <option value="6">ビクッ</option>
+          <option value="6">びっくり</option>
           <option value="7">怒り</option>  
         </select>
       </div>

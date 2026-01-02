@@ -4,11 +4,10 @@ class CharDraw {
     this.charindex = 0;
     this.dirindex = 0;
     this.emoindex = 0;
-    this.bowindex = 0;
+    this.browindex = 0;
     this.eyeindex = 0;
     this.mouthindex = 0;
     this.iconindex = 0;
-    this.char = null;
     this.chars = [];
   }
 
@@ -41,6 +40,16 @@ class CharDraw {
             return;
           }
           this.charindex = index;
+          this.update();
+        });
+      }
+    }
+
+    {
+      const qs = document.querySelectorAll(`input[name="radiobrow"]`);
+      for (const q of qs) {
+        q.addEventListener('click', () => {
+          this.browindex = Number.parseInt(q.value);
           this.update();
         });
       }
@@ -98,7 +107,7 @@ class CharDraw {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this.emoindex === 0) {
-      char.put(SDChr.BROW_NORMAL, this.eyeindex, this.mouthindex,
+      char.put(this.browindex, this.eyeindex, this.mouthindex,
         context, pos);
     } else {
       char.putex(this.emoindex, context, pos);
@@ -130,12 +139,11 @@ class CharDraw {
 
     /** @type {HTMLCanvasElement} */
     const canvas = document.getElementById('maincanvas');
-    const context = canvas.getContext('2d');
+    //const context = canvas.getContext('2d');
     const scale = 1;
     canvas.width = SDChr.FSX * scale;
     canvas.height = SDChr.FSY * scale;
 
-    this.char = this.chars[0][0];
     this.update();
   }
 }
