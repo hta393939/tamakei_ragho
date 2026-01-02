@@ -10,3 +10,8 @@
 .limitation {
   max-height: 90vh;
 }
+
+.toright {
+  display: flex;
+  flex-direction: row;
+}

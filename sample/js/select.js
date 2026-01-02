@@ -45,6 +45,27 @@ class CharDraw {
         });
       }
     }
+
+    {
+      const qs = document.querySelectorAll(`input[name="radioeye"]`);
+      for (const q of qs) {
+        q.addEventListener('click', () => {
+          this.eyeindex = Number.parseInt(q.value);
+          this.update();
+        });
+      }
+    }
+
+    {
+      const qs = document.querySelectorAll(`input[name="radiomouth"]`);
+      for (const q of qs) {
+        q.addEventListener('click', () => {
+          this.mouthindex = Number.parseInt(q.value);
+          this.update();
+        });
+      }
+    }
+
     {
       const el = document.getElementById('selemo');
       el?.addEventListener('change', () => {
@@ -77,7 +98,7 @@ class CharDraw {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this.emoindex === 0) {
-      char.put(SDChr.BROW_NORMAL, SDChr.EYE_NORMAL, SDChr.MOUTH_CLOSE,
+      char.put(SDChr.BROW_NORMAL, this.eyeindex, this.mouthindex,
         context, pos);
     } else {
       char.putex(this.emoindex, context, pos);
