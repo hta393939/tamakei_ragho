@@ -1,0 +1,94 @@
+--information: 慧珠 v0.2.1
+--select@charindex:キャラ=0,慧=0,珠音=1,フィネス=2,千由莉=3
+--select@dir:向き=0,右向き=0,左向き=1
+--select@iconindex:アイコン=0,無し=0,キラ=1,陽0=2,陽1=3,ハート=4,モヤ=5,びっくり=6,怒り=7
+--check@santa:サンタ帽(未実装),0
+--select@emoindex:表情=0,組み合わせ=0,泣き=1,どや=2,丸目=3,にっこり=4,怒り=5,嬉しい=6,じと目=7
+--group:組み合わせ,true
+--select@browindex:眉=0,普通=0,悲しみ=1,怒り=2,驚き=3
+--select@eyeindex:目=0,普通=0,中間=1,閉じる=2
+--select@mouthindex:口=0,閉じる=0,開く=1
+--group
+
+local fsx = 640
+local fsy = 1024
+local fox = 512
+local foy = 256
+local fpx = 384
+local fpy = 128
+local fpx2 = fpx / 2
+local fofs_eye = fpy * 4
+local fofs_mouth = fpy * 7
+
+local function rect(sx, sy, w, h, indx, indy)
+  local dx = indx - fsx * 0.5 + w * 0.5
+  local dy = indy - fsy * 0.5 + h * 0.5
+  obj.drawpoly(dx - w * 0.5, dy - h * 0.5, 0, dx + w * 0.5, dy - h * 0.5, 0, dx + w * 0.5, dy + h * 0.5, 0, dx - w * 0.5, dy + h * 0.5, 0, sx, sy, sx + w, sy, sx + w, sy + h, sx, sy + h)
+end
+
+
+local lrt = {'r', 'l'}
+local namet = {'ke', 'ta', 'fi', 'ti'}
+local charname = string.format('%s%s', namet[charindex + 1], lrt[dir + 1])
+
+obj.setoption('drawtarget', 'tempbuffer', fsx, fsy)
+
+local basepath = 'G:\\work\\tamakei_ragho\\png'
+
+-- ベース
+local dx = 0
+local dy = 0
+-- corner 0-origin
+local sx = 0
+local sy = 0
+local w = fsx
+local h = fsy
+obj.load('image', basepath .. string.format('\\up_%s.png', charname))
+rect(sx, sy, w, h, dx, dy)
+
+if emoindex == 0 then
+  w = fpx
+  h = fpy
+  sx = 0
+  sy = 0
+  dx = 0
+  dy = 0
+  rect(sx, sy, w, h, dx, dy)
+  sx = 0
+  sy = 0
+  dx = 0
+  dy = 0
+  rect(sx, sy, w, h, dx, dy)
+  sx = 0
+  sy = 0
+  dx = 0
+  dy = 0
+  rect(sx, sy, w, h, dx, dy)
+else
+  -- 単表情
+  obj.load('image', basepath .. string.format('\\face_%s.png', charname))
+  sx = emoindex % 2
+  sy = math.floor(emoindex / 2)
+  rect(sx * fox, sy * foy, fox, foy, dx, dy)
+end
+
+-- アイコン
+if iconindex >= 1 then
+  local oxy = { { 10, 80 }, { -50, 100 }, { -50, 100 }, {-50,100}, {-50,100}, {30,30}, {0,100} }
+  obj.load('image', basepath .. '\\up_icon.png')
+  sx = iconindex % 2
+  sy = math.floor(iconindex / 2)
+  dx = oxy[iconindex][1]
+  dy = oxy[iconindex][2]
+  if dir == 0 then
+    sx = 3 - sx
+    -- 
+  end
+  rect(sx * 256, sy * 256, 256, 256, dx, dy)
+end
+
+obj.load('tempbuffer')
+
+-- 確認バージョン
+-- AviUtl ExEdit2 version2.00 beta26
+
