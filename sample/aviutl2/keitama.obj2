@@ -1,16 +1,23 @@
---information: 慧珠 v0.2.1
+--information:慧珠 v0.2.1
 --select@charindex:キャラ=0,慧=0,珠音=1,フィネス=2,千由莉=3
 --select@dir:向き=0,右向き=0,左向き=1
 --select@iconindex:アイコン=0,無し=0,キラ=1,陽0=2,陽1=3,ハート=4,モヤ=5,びっくり=6,怒り=7
---check@santa:サンタ帽(未実装),0
+--check@santa:サンタ帽,0
 --select@emoindex:表情=0,組み合わせ=0,泣き=1,どや=2,丸目=3,にっこり=4,怒り=5,嬉しい=6,じと目=7
---group:組み合わせ,true
+--group:表情組み合わせ,true
 --select@browindex:眉=0,普通=0,悲しみ=1,怒り=2,驚き=3
 --select@eyeindex:目=0,普通=0,中間=1,閉じる=2
 --select@mouthindex:口=0,閉じる=0,開く=1
 --group
 
+local basepath = '.'
+
 local fsx = 640
+local x_size = 640
+if santa ~= 0 then
+  x_size = 640 + 100 + 100
+end
+
 local fsy = 1024
 local fox = 512
 local foy = 256
@@ -19,10 +26,23 @@ local fpy = 128
 local fpx2 = fpx / 2
 local fofs_eye = fpy * 4
 local fofs_mouth = fpy * 7
+local upiconsx = 256
+local upiconsy = 256
+
+local axt = {
+{64,386,90,331,90,419,183,536},
+{64,386,169,334,170,421,261,540},
+{64,384,116,332,115,427,207,544},
+{64,384,129,332,132,432,222,544},
+{64,384,83,333,88,421,176,532},
+{64,384,198,326,196,425,292,533},
+{64,384,98,363,101,448,197,555},
+{64,384,173,363,160,450,262,555}	
+}
 
 local function rect(sx, sy, w, h, indx, indy)
-  local dx = indx - fsx * 0.5 + w * 0.5
-  local dy = indy - fsy * 0.5 + h * 0.5
+  local dx = indx + w * 0.5 - fsx * 0.5
+  local dy = indy + h * 0.5 - fsy * 0.5
   obj.drawpoly(dx - w * 0.5, dy - h * 0.5, 0, dx + w * 0.5, dy - h * 0.5, 0, dx + w * 0.5, dy + h * 0.5, 0, dx - w * 0.5, dy + h * 0.5, 0, sx, sy, sx + w, sy, sx + w, sy + h, sx, sy + h)
 end
 
@@ -31,9 +51,9 @@ local lrt = {'r', 'l'}
 local namet = {'ke', 'ta', 'fi', 'ti'}
 local charname = string.format('%s%s', namet[charindex + 1], lrt[dir + 1])
 
-obj.setoption('drawtarget', 'tempbuffer', fsx, fsy)
+local ax = axt[charindex * 2 + (1 - dir) + 1]
 
-local basepath = 'G:\\work\\tamakei_ragho\\png'
+obj.setoption('drawtarget', 'tempbuffer', x_size, fsy)
 
 -- ベース
 local dx = 0
@@ -49,27 +69,50 @@ rect(sx, sy, w, h, dx, dy)
 if emoindex == 0 then
   w = fpx
   h = fpy
-  sx = 0
-  sy = 0
-  dx = 0
-  dy = 0
+  sx = fsx
+  sy = fpy * browindex
+  dx = ax[3]
+  dy = ax[4]
   rect(sx, sy, w, h, dx, dy)
-  sx = 0
-  sy = 0
-  dx = 0
-  dy = 0
+  sx = fsx
+  sy = fofs_eye + fpy * eyeindex
+  dx = ax[5]
+  dy = ax[6]
   rect(sx, sy, w, h, dx, dy)
-  sx = 0
-  sy = 0
-  dx = 0
-  dy = 0
+  w = fpx2
+  sx = fsx + fpx2 * mouthindex
+  sy = fofs_mouth
+  dx = ax[7]
+  dy = ax[8]
   rect(sx, sy, w, h, dx, dy)
 else
   -- 単表情
   obj.load('image', basepath .. string.format('\\face_%s.png', charname))
   sx = emoindex % 2
   sy = math.floor(emoindex / 2)
+  dx = ax[1]
+  dy = ax[2]
   rect(sx * fox, sy * foy, fox, foy, dx, dy)
+end
+
+-- サンタ帽
+if santa ~= 0 then
+  obj.load('image', basepath .. string.format('\\santa_%s.png', lrt[dir + 1]))
+  local yy = 70
+  local px = 20
+  if charindex == 2 then
+    yy = 50
+    px = 0
+  end
+  local xx = 346 - px
+  if dir == 0 then
+    if charindex == 1 then
+      px = px - 10
+    end
+    xx = -60 + px
+  end
+  rect(0,0, 384,300, xx,yy)
+  --debug_print(string.format('santa, %d, %d', xx, 640 - (xx + 384)))
 end
 
 -- アイコン
@@ -82,9 +125,9 @@ if iconindex >= 1 then
   dy = oxy[iconindex][2]
   if dir == 0 then
     sx = 3 - sx
-    -- 
+    dx = fsx - dx - upiconsx
   end
-  rect(sx * 256, sy * 256, 256, 256, dx, dy)
+  rect(sx * upiconsx, sy * upiconsy, upiconsx, upiconsy, dx, dy)
 end
 
 obj.load('tempbuffer')
